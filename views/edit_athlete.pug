@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    h1 #{title}
+    form(method='POST', action='/athletes/edit/'+athlete._id)
+        #form-group
+            label Athlete's name:
+                input.form-control(name='name', type='text' value=athlete.name)
+        #form-group
+            label Athlete's club name:
+                input.form-control(name='clubName', type='text' value=athlete.clubName)
+        #form-group
+            label Body:
+                textarea.form-control(name='body')= athlete.body
+        br
+        input.btn.btn-primary(type='submit', value='Submit')

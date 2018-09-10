@@ -1,45 +1,46 @@
 const express = require('express');
 const router = express.Router();
 
-// Bring Article Models
-let Article = require('../models/article');
+// Bring Athlete Models
+let Athlete = require('../models/athlete');
 
 // Bring User Model
 let User = require('../models/user');
 
 // Add Route
 router.get('/add', ensureAuthenticated,function(req, res) {
-    res.render('add_article', {
-        title: 'Add Article'
+    res.render('add_athlete', {
+        title: 'Add Athlete'
     })
 })
 
 // Add Submit POST Route
 router.post('/add', function(req, res) {
-    req.checkBody('title', 'Title is required').notEmpty();
-    // req.checkBody('author', 'Author is required').notEmpty();
+    req.checkBody('name', 'Name is required').notEmpty();
+    req.checkBody('clubName', 'Club name is required').notEmpty();
     req.checkBody('body', 'Body is required').notEmpty();
 
     // Get Errors
     let errors = req.validationErrors();
 
     if (errors) {
-        res.render('add_article', {
-            title: 'Add Article',
+        res.render('add_athlete', {
+            title: 'Add Athlete',
             errors: errors
         })
     } else {
-        let article = new Article();
-        article.title = req.body.title;
-        article.author = req.user._id;
-        article.body = req.body.body;
+        let athlete = new Athlete();
+        athlete.name = req.body.name;
+        athlete.clubName = req.body.clubName;
+        athlete.author = req.user._id;
+        athlete.body = req.body.body;
 
-        article.save(function(err) {
+        athlete.save(function(err) {
             if (err) {
                 console.log(err);
                 return;
             } else {
-                req.flash('success', 'Article Added');
+                req.flash('success', 'Athlete Added');
                 res.redirect('/');
             }
         })
@@ -48,41 +49,42 @@ router.post('/add', function(req, res) {
 
 // Add Edit Form
 router.get('/edit/:id', ensureAuthenticated, function(req, res) {
-    Article.findById(req.params.id, function(err, article) {
-        if (article.author != req.user._id) {
+    Athlete.findById(req.params.id, function(err, athlete) {
+        if (athlete.author != req.user._id) {
             req.flash('danger', 'Not Authorized');
             return res.redirect('/');
         }
-        res.render('edit_article', {
-            title: 'Edit Article',
-            article: article
+        res.render('edit_athlete', {
+            title: 'Edit Athlete',
+            athlete: athlete
         })
     })
 })
 
 // Update Submit POST Route
 router.post('/edit/:id', function(req, res) {
-    let article = {};
-    article.title = req.body.title;
-    article.author = req.body.author;
-    article.body = req.body.body;
+    let athlete = {};
+    athlete.name = req.body.name;
+    athlete.clubName = req.body.clubName;
+    athlete.author = req.body.author;
+    athlete.body = req.body.body;
 
     let query = {
         _id: req.params.id
     }
 
-    Article.update(query, article, function(err) {
+    Athlete.update(query, athlete, function(err) {
         if (err) {
             console.log(err);
             return;
         } else {
-            req.flash('success', 'Article Updated')
+            req.flash('success', 'Athlete Updated')
             res.redirect('/');
         }
     })
 })
 
-// Delete Article
+// Delete Athlete
 router.delete('/:id', function(req, res) {
     if (!req.user._id) {
         res.status(500).send();
@@ -91,11 +93,11 @@ router.delete('/:id', function(req, res) {
     let query = {
         _id: req.params.id
     }
-    Article.findById(req.params.id, function(err, article) {
-        if (article.author != req.user._id) {
+    Athlete.findById(req.params.id, function(err, athlete) {
+        if (athlete.author != req.user._id) {
             res.status(500).send();
         } else {
-            Article.remove(query, function(err) {
+            Athlete.remove(query, function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -105,12 +107,12 @@ router.delete('/:id', function(req, res) {
     })
 })
 
-// Get Single Article
+// Get Single Athlete
 router.get('/:id', function(req, res) {
-    Article.findById(req.params.id, function(err, article) {
-        User.findById(article.author, function(err, user) {
-            res.render('article', {
-                article: article,
+    Athlete.findById(req.params.id, function(err, athlete) {
+        User.findById(athlete.author, function(err, user) {
+            res.render('athlete', {
+                athlete: athlete,
                 author: user.name
             })
         })

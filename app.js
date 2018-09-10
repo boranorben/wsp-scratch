@@ -26,7 +26,7 @@ db.on('error', function(err) {
 const app = express();
 
 // Bring in Models
-let Article = require('./models/article');
+let Athlete = require('./models/athlete');
 
 // Load view engine
 app.set('views', path.join(__dirname, 'views'));
@@ -88,22 +88,22 @@ app.get('*', function(req, res, next) {
 
 // Home Route (send something to web browser)
 app.get('/', function(req, res) {
-    Article.find({}, function(err, articles) {
+    Athlete.find({}, function(err, athletes) {
         if (err) {
             console.log(err);
         } else {
             res.render('index', {
-                title: 'Article',
-                articles: articles
+                title: 'Athletes List',
+                athletes: athletes
             });
         }
     })
 });
 
 // Route Files
-let articles = require('./routes/articles');
+let athletes = require('./routes/athletes');
 let users = require('./routes/users');
-app.use('/articles', articles);
+app.use('/athletes', athletes);
 app.use('/users', users);
 
 // Start server

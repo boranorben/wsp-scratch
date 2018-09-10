@@ -1,8 +1,12 @@
 let mongoose = require('mongoose');
-// Article Schema
-let articleSchema = mongoose.Schema(
+// Athlete Schema
+let athleteSchema = mongoose.Schema(
     {
-        title: {
+        name: {
+            type: String,
+            require: true
+        },
+        clubName: {
             type: String,
             require: true
         },
@@ -17,4 +21,4 @@ let articleSchema = mongoose.Schema(
     }
 )
 
-let Article = module.exports = mongoose.model('Article', articleSchema);
+let Athlete = module.exports = mongoose.model('Athlete', athleteSchema);
